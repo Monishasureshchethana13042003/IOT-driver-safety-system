@@ -1,3 +1,4 @@
+import pyttsx3
 import cv2
 import numpy as np
 import dlib
@@ -7,6 +8,9 @@ import time
 
 # Initializing the camera and taking the instance
 cap = cv2.VideoCapture(0)
+
+# Initializing engine
+engine = pyttsx3.init()
 
 # Initializing the face detector and landmark detector
 detector = dlib.get_frontal_face_detector()
@@ -74,7 +78,11 @@ while True:
             drowsy = 0
             active = 0
             if sleep > 6:
-                status = "SLEEPING !!!"
+                status = "SLEEPING, WAKEUP!!!"
+                for i in range(4):
+                    engine.say("Wakeup")
+                    time.sleep(1) 
+                engine.runAndWait() 
                 color = (255, 0, 0)
                 # Send the status to the Arduino
                 ser.write(status.encode())
@@ -86,6 +94,10 @@ while True:
             drowsy += 1
             if drowsy > 6:
                 status = "Drowsy !"
+                for i in range(4):
+                    engine.say("Are you okay")
+                    time.sleep(1) 
+                engine.runAndWait()
                 color = (0, 0, 255)
                 # Send the status to the Arduino
                 ser.write(status.encode())
@@ -118,4 +130,5 @@ while True:
         break
 
 cap.release()
+
 cv2.destroyAllWindows()
